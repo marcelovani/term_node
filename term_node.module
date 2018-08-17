@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains term_node.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function term_node_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the term_node module.
+    case 'help.page.term_node':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allow a term to be configured to show the content on a referenced node rather than the default term view') . '</p>';
+      return $output;
+
+    default:
+  }
+}

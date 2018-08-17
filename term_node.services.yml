@@ -1,0 +1,9 @@
+services:
+  term_node.resolver:
+    class: Drupal\term_node\Resolver
+  term_node.path.inbound:
+    class: Drupal\term_node\PathProcessor\Inbound
+    arguments: ['@path.alias_manager', '@term_node.resolver']
+    tags:
+      - { name: 'event_subscriber' }
+      - { name: path_processor_inbound, priority: 0 }
