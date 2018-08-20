@@ -41,7 +41,9 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
    * Constructs a Inbound object.
    *
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
-   *   An alias manager for looking up the system path.
+   *  An alias manager for looking up the system path.
+   * @param ResolverInterface $resolver
+   *  Resolves which path to use.
    */
   public function __construct(AliasManagerInterface $alias_manager, ResolverInterface $resolver) {
     $this->aliasManager = $alias_manager;

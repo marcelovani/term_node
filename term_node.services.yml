@@ -1,9 +1,16 @@
 services:
-  term_node.resolver:
-    class: Drupal\term_node\Resolver
-  term_node.path.inbound:
+  term_node.inbound.resolver:
+    class: Drupal\term_node\InboundResolver
+  term_node.inbound.path:
     class: Drupal\term_node\PathProcessor\Inbound
-    arguments: ['@path.alias_manager', '@term_node.resolver']
+    arguments: ['@path.alias_manager', '@term_node.inbound.resolver']
     tags:
       - { name: 'event_subscriber' }
       - { name: path_processor_inbound, priority: 0 }
+  term_node.outbound.resolver:
+      class: Drupal\term_node\OutboundResolver
+  term_node.outbound.path:
+    class: Drupal\term_node\PathProcessor\Outbound
+    arguments: ['@path.alias_manager', '@term_node.outbound.resolver']
+    tags:
+      - { name: path_processor_outbound, priority: 0 }
