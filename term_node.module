@@ -5,6 +5,7 @@
  * Contains term_node.module.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -20,5 +21,27 @@ function term_node_help($route_name, RouteMatchInterface $route_match) {
       return $output;
 
     default:
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ */
+function term_node_taxonomy_term_update(EntityInterface $entity) {
+  // Delete the cache entry for the term route.
+  try {
+    // Have to build the cid rather than get it from the 'router.route_provider' service
+    // as the method getRouteCollectionCacheId() is protected.
+    $cid = sprintf(
+      'route:%s:%s:',
+      $entity->language()->getId(),
+      $entity->toUrl()->toString()
+    );
+    // Use the same CacheBackendInterface service as RouteProvider.
+    // Shame it's hardcoded, it would be good to get it from the RouteProvider
+    // then we could be sure it's the same service.
+    \Drupal::service('cache.data')->delete($cid);
+  } catch (\Drupal\Core\Entity\EntityMalformedException $e) {
+    // No cache entry to delete.
   }
 }
