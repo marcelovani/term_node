@@ -41,6 +41,16 @@ function term_node_taxonomy_term_update(EntityInterface $entity) {
     // Shame it's hardcoded, it would be good to get it from the RouteProvider
     // then we could be sure it's the same service.
     \Drupal::service('cache.data')->delete($cid);
+
+    // Need to clear the route cache for the node that was the term node too.
+    $original = $entity->original;
+    $cid = sprintf(
+      'route:%s:%s:',
+      $original->language()->getId(),
+      $original->toUrl()->toString()
+    );
+    \Drupal::service('cache.data')->delete($cid);
+
   } catch (\Drupal\Core\Entity\EntityMalformedException $e) {
     // No cache entry to delete.
   }
