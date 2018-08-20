@@ -11,9 +11,10 @@ interface ResolverInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    * @param string $path
+   * @param int $tid
    *
    * @return string
    */
-  public function getPath(Request $request, $path);
+  public function getPath(Request $request, $path, $tid);
 
 }

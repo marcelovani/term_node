@@ -79,8 +79,8 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
     // Only interested in default taxonomy term pages.
     if (strpos($original_path, '/taxonomy/term/') === 0) {
       // Now match on just the view path.
-      if (preg_match('|/taxonomy/term/\d+$|', $original_path)) {
-        $path = $this->resolver->getPath($request, $original_path);
+      if (preg_match('|/taxonomy/term/(\d+)$|', $original_path, $matches)) {
+        $path = $this->resolver->getPath($request, $original_path, $matches[1]);
         if ($path != $original_path) {
           $this->path = $path;
           // Don't redirect due to the path changing.
