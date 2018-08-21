@@ -13,12 +13,23 @@ class InboundResolver implements ResolverInterface {
   public function getPath(Request $request, $path, $tid) {
     // Get the node id from the field if it exists.
     if ($term = Term::load($tid)) {
-      if ($term->hasField('field_term_node')) {
-        return '/node/' . $term->get('field_term_node')->target_id;
+      if ($id = $this->getReferencedId($term)) {
+        return '/node/' . $id;
       }
     }
 
     return $path;
+  }
+
+  /**
+   * The id of the node referenced by the term.
+   */
+  public function getReferencedId(Term $term) {
+    if ($term->hasField('field_term_node')) {
+      return $term->get('field_term_node')->target_id;
+    }
+
+    return FALSE;
   }
 
 }

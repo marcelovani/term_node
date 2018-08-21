@@ -28,30 +28,19 @@ function term_node_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_ENTITY_TYPE_update().
  */
 function term_node_taxonomy_term_update(EntityInterface $entity) {
-  // Delete the cache entry for the term route.
-  try {
-    // Have to build the cid rather than get it from the 'router.route_provider' service
-    // as the method getRouteCollectionCacheId() is protected.
-    $cid = sprintf(
-      'route:%s:%s:',
-      $entity->language()->getId(),
-      $entity->toUrl()->toString()
-    );
-    // Use the same CacheBackendInterface service as RouteProvider.
-    // Shame it's hardcoded, it would be good to get it from the RouteProvider
-    // then we could be sure it's the same service.
-    \Drupal::service('cache.data')->delete($cid);
+  // Invalidate the relevant cache entries.
+  $tags[] = 'route_match';
 
-    // Need to clear the route cache for the node that was the term node too.
-    $original = $entity->original;
-    $cid = sprintf(
-      'route:%s:%s:',
-      $original->language()->getId(),
-      $original->toUrl()->toString()
-    );
-    \Drupal::service('cache.data')->delete($cid);
+  $resolver = \Drupal::service('term_node.inbound.resolver');
+  // Clear the caches for the node that is now the term node.
+  $nid = $resolver->getReferencedId($entity);
+  $tags[] = 'node:' . $nid;
 
-  } catch (\Drupal\Core\Entity\EntityMalformedException $e) {
-    // No cache entry to delete.
+  // Clear the caches for the node that was previously the term node.
+  if ($original = $entity->original) {
+    $nid = $resolver->getReferencedId($original);
+    $tags[] = 'node:' . $nid;
   }
+
+  \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
 }
