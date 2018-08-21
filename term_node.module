@@ -28,19 +28,28 @@ function term_node_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_ENTITY_TYPE_update().
  */
 function term_node_taxonomy_term_update(EntityInterface $entity) {
-  // Invalidate the relevant cache entries.
-  $tags[] = 'route_match';
-
   $resolver = \Drupal::service('term_node.resolver.term');
-  // Clear the caches for the node that is now the term node.
   $nid = $resolver->getReferencedId($entity);
-  $tags[] = 'node:' . $nid;
+  $original_nid = NULL;
 
-  // Clear the caches for the node that was previously the term node.
   if ($original = $entity->original) {
-    $nid = $resolver->getReferencedId($original);
-    $tags[] = 'node:' . $nid;
+    $original_nid = $resolver->getReferencedId($original);
   }
 
-  \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
+  // Check for the term_node field changing.
+  if ($nid != $original_nid) {
+    if (!empty($original_nid)) {
+      // Clear the caches for the node that was previously the term node.
+      $tags[] = 'node:' . $original_nid;
+    }
+    if (!empty($nid)) {
+      // Clear the caches for the node that is now the term node.
+      $tags[] = 'node:' . $nid;
+    }
+
+    // Invalidate routes.
+    $tags[] = 'route_match';
+
+    \Drupal::service('cache_tags.invalidator')->invalidateTags($tags);
+  }
 }
