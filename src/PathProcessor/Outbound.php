@@ -5,6 +5,7 @@ namespace Drupal\term_node\PathProcessor;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\term_node\NodeResolver;
 use Drupal\term_node\ResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -24,9 +25,9 @@ class Outbound implements OutboundPathProcessorInterface {
   /**
    * Figures out if a different path should be used.
    *
-   * @var ResolverInterface
+   * @var \Drupal\term_node\NodeResolver
    */
-  protected $resolver;
+  protected $nodeResolver;
 
   /**
    * The path to use for the term.
@@ -43,9 +44,9 @@ class Outbound implements OutboundPathProcessorInterface {
    * @param ResolverInterface $resolver
    *  Resolves which path to use.
    */
-  public function __construct(AliasManagerInterface $alias_manager, ResolverInterface $resolver) {
+  public function __construct(AliasManagerInterface $alias_manager, NodeResolver $node_resolver) {
     $this->aliasManager = $alias_manager;
-    $this->resolver = $resolver;
+    $this->nodeResolver = $node_resolver;
   }
 
   /**
@@ -59,7 +60,7 @@ class Outbound implements OutboundPathProcessorInterface {
     if (strpos($original_path, '/node/') === 0) {
       // Now match on just the view path.
       if (preg_match('|/node/(\d+)$|', $original_path, $matches)) {
-        $new_path = $this->resolver->getPath($request, $original_path, $matches[1]);
+        $new_path = $this->nodeResolver->getPath($request, $original_path, $matches[1]);
         if ($new_path != $original_path) {
           $path = $new_path;
         }

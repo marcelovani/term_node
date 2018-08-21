@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\Request;
 
-class OutboundResolver implements ResolverInterface, OutboundResolverInterface {
+class NodeResolver implements NodeResolverInterface {
 
   /**
    * @inheritDoc

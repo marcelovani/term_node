@@ -31,7 +31,7 @@ function term_node_taxonomy_term_update(EntityInterface $entity) {
   // Invalidate the relevant cache entries.
   $tags[] = 'route_match';
 
-  $resolver = \Drupal::service('term_node.inbound.resolver');
+  $resolver = \Drupal::service('term_node.resolver.term');
   // Clear the caches for the node that is now the term node.
   $nid = $resolver->getReferencedId($entity);
   $tags[] = 'node:' . $nid;

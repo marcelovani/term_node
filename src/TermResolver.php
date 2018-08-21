@@ -5,7 +5,7 @@ namespace Drupal\term_node;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\Request;
 
-class InboundResolver implements ResolverInterface, InboundResolverInterface {
+class TermResolver implements TermResolverInterface {
 
   /**
    * @inheritDoc

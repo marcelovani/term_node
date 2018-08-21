@@ -4,7 +4,7 @@ namespace Drupal\term_node;
 
 use Drupal\taxonomy\Entity\Term;
 
-interface InboundResolverInterface {
+interface TermResolverInterface extends ResolverInterface {
 
   /**
    * Gets the id of the node referenced by the term.

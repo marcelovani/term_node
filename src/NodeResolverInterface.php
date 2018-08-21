@@ -2,7 +2,7 @@
 
 namespace Drupal\term_node;
 
-interface OutboundResolverInterface {
+interface NodeResolverInterface extends ResolverInterface {
 
   /**
    * The tid of the term referencing the content.

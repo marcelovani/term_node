@@ -4,6 +4,8 @@ namespace Drupal\term_node\PathProcessor;
 
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\term_node\TermResolverInterface;
+use Drupal\term_node\NodeResolverInterface;
 use Drupal\term_node\ResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,9 +28,16 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
   /**
    * Figures out if a different path should be used.
    *
-   * @var ResolverInterface
+   * @var TermResolverInterface
    */
-  protected $resolver;
+  protected $termResolver;
+
+  /**
+   * Figures out if a different path should be used.
+   *
+   * @var NodeResolverInterface
+   */
+  protected $nodeResolver;
 
   /**
    * The path to use for the term.
@@ -45,9 +54,14 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
    * @param ResolverInterface $resolver
    *  Resolves which path to use.
    */
-  public function __construct(AliasManagerInterface $alias_manager, ResolverInterface $resolver) {
+  public function __construct(
+    AliasManagerInterface $alias_manager,
+    TermResolverInterface $term_resolver,
+    NodeResolverInterface $node_resolver
+  ) {
     $this->aliasManager = $alias_manager;
-    $this->resolver = $resolver;
+    $this->termResolver = $term_resolver;
+    $this->nodeResolver = $node_resolver;
   }
 
   /**
@@ -78,16 +92,25 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
     $path = $path === '/' ? $path : rtrim($request->getPathInfo(), '/');
     $original_path = $this->aliasManager->getPathByAlias($path);
 
-    // Only interested in default taxonomy term pages.
-    if (strpos($original_path, '/taxonomy/term/') === 0) {
-      // Now match on just the view path.
-      if (preg_match('|/taxonomy/term/(\d+)$|', $original_path, $matches)) {
-        $path = $this->resolver->getPath($request, $original_path, $matches[1]);
-        if ($path != $original_path) {
-          $this->path = $path;
-          // Don't redirect due to the path changing.
-          $request->attributes->add(['_disable_route_normalizer' => TRUE]);
-        }
+    $parts = explode('/', trim($original_path, '/'));
+    $count = count($parts);
+
+    if ($count == 2 && $parts[0] == 'node') {
+      // If the node is a term_node, do not redirect to the term path
+      // when using the node's own path.
+      if ($this->nodeResolver->getReferencedBy($parts[1])) {
+        // Don't redirect.
+        $request->attributes->add(['_disable_route_normalizer' => TRUE]);
+      }
+    }
+    elseif ($count == 3 && $parts[1] == 'term') {
+      // If the term has node referenced, show the node content
+      // but do not redirect to the node itself.
+      $path = $this->termResolver->getPath($request, $original_path, $parts[2]);
+      if ($path != $original_path) {
+        $this->path = $path;
+        // Don't redirect due to the path changing.
+        $request->attributes->add(['_disable_route_normalizer' => TRUE]);
       }
     }
   }
