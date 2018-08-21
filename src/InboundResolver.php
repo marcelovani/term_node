@@ -5,7 +5,7 @@ namespace Drupal\term_node;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\Request;
 
-class InboundResolver implements ResolverInterface {
+class InboundResolver implements ResolverInterface, InboundResolverInterface {
 
   /**
    * @inheritDoc
@@ -22,7 +22,7 @@ class InboundResolver implements ResolverInterface {
   }
 
   /**
-   * The id of the node referenced by the term.
+   * @inheritDoc
    */
   public function getReferencedId(Term $term) {
     if ($term->hasField('field_term_node')) {

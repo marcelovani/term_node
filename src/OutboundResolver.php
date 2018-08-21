@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\Request;
 
-class OutboundResolver implements ResolverInterface {
+class OutboundResolver implements ResolverInterface, OutboundResolverInterface {
 
   /**
    * @inheritDoc
@@ -27,7 +27,7 @@ class OutboundResolver implements ResolverInterface {
   }
 
   /**
-   * The tid of the term referencing the node.
+   * @inheritDoc
    */
   public function getReferencedBy($nid) {
     $query = \Drupal::entityQuery('taxonomy_term')
