@@ -5,7 +5,7 @@ namespace Drupal\term_node\PathProcessor;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\term_node\NodeResolver;
+use Drupal\term_node\NodeResolverInterface;
 use Drupal\term_node\ResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,7 +25,7 @@ class Outbound implements OutboundPathProcessorInterface {
   /**
    * Figures out if a different path should be used.
    *
-   * @var \Drupal\term_node\NodeResolver
+   * @var \Drupal\term_node\NodeResolverInterface
    */
   protected $nodeResolver;
 
@@ -44,7 +44,7 @@ class Outbound implements OutboundPathProcessorInterface {
    * @param ResolverInterface $resolver
    *  Resolves which path to use.
    */
-  public function __construct(AliasManagerInterface $alias_manager, NodeResolver $node_resolver) {
+  public function __construct(AliasManagerInterface $alias_manager, NodeResolverInterface $node_resolver) {
     $this->aliasManager = $alias_manager;
     $this->nodeResolver = $node_resolver;
   }
