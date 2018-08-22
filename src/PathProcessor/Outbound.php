@@ -60,7 +60,7 @@ class Outbound implements OutboundPathProcessorInterface {
     if (strpos($original_path, '/node/') === 0) {
       // Now match on just the view path.
       if (preg_match('|/node/(\d+)$|', $original_path, $matches)) {
-        $new_path = $this->nodeResolver->getPath($request, $original_path, $matches[1]);
+        $new_path = $this->nodeResolver->getPath($original_path, $matches[1]);
         if ($new_path != $original_path) {
           $path = $new_path;
         }

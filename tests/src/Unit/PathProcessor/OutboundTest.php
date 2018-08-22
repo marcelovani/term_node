@@ -4,11 +4,6 @@ namespace Drupal\Tests\term_node\Unit\PathProcessor;
 
 use Drupal\term_node\PathProcessor\Outbound;
 use Drupal\Tests\UnitTestCase;
-use Drupal\redirect\EventSubscriber\RouteNormalizerRequestSubscriber;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 
 /**
  * Tests outbound alter
