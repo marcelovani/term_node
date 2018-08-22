@@ -7,14 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 interface ResolverInterface {
 
   /**
-   * The path that should be used for this request.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
+   * The path that should be used.
    * @param string $path
    * @param int $entity_id
    *
    * @return string
    */
-  public function getPath(Request $request, $path, $entity_id);
+  public function getPath($path, $entity_id);
 
 }

@@ -11,7 +11,7 @@ class NodeResolver implements NodeResolverInterface {
   /**
    * @inheritDoc
    */
-  public function getPath(Request $request, $path, $nid) {
+  public function getPath($path, $nid) {
     // Get the tid of a referencing term.
     if ($tid = $this->getReferencedBy($nid)) {
       try {

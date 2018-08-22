@@ -10,7 +10,7 @@ class TermResolver implements TermResolverInterface {
   /**
    * @inheritDoc
    */
-  public function getPath(Request $request, $path, $tid) {
+  public function getPath($path, $tid) {
     // Get the node id from the field if it exists.
     if ($term = Term::load($tid)) {
       if ($id = $this->getReferencedId($term)) {
