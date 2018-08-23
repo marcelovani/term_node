@@ -3,7 +3,6 @@
 namespace Drupal\Tests\term_node\Unit\PathProcessor;
 
 use Drupal\term_node\PathProcessor\Inbound;
-use Drupal\term_node\PathProcessor\Outbound;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelEvents;

@@ -3,7 +3,6 @@
 namespace Drupal\term_node;
 
 use Drupal\taxonomy\Entity\Term;
-use Symfony\Component\HttpFoundation\Request;
 
 class TermResolver implements TermResolverInterface {
 

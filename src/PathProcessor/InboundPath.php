@@ -70,16 +70,13 @@ class InboundPath implements InboundPathInterface {
       return $this->path;
     }
 
-    $this->path = $path;
-
-    $redirect_module = $this->moduleHandler->moduleExists('redirect');
-
     $parts = explode('/', trim($path, '/'));
     $count = count($parts);
 
     if ($count == 2 && $parts[0] == 'node') {
       // If the node is a term_node, do not redirect to the term path
       // when using the node's own path.
+      $redirect_module = $this->moduleHandler->moduleExists('redirect');
       if ($redirect_module && $this->nodeResolver->getReferencedBy($parts[1])) {
         // Don't redirect.
         $request->attributes->add(['_disable_route_normalizer' => TRUE]);
@@ -90,13 +87,13 @@ class InboundPath implements InboundPathInterface {
       // but do not redirect to the node itself.
       $new_path = $this->termResolver->getPath($path, $parts[2]);
       if ($new_path != $path) {
-        $this->path = $new_path;
+        $path = $this->path = $new_path;
         // Don't redirect due to the path changing.
         $request->attributes->add(['_disable_route_normalizer' => TRUE]);
       }
     }
 
-    return $this->path;
+    return $path;
   }
 
 }

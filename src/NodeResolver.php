@@ -4,7 +4,6 @@ namespace Drupal\term_node;
 
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\taxonomy\Entity\Term;
-use Symfony\Component\HttpFoundation\Request;
 
 class NodeResolver implements NodeResolverInterface {
 
