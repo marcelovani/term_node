@@ -19,6 +19,6 @@ services:
       - { name: path_processor_outbound, priority: 0 }
   term_node.breadcrumb.default:
     class: Drupal\term_node\Breadcrumb\TermNodeBreadcrumbBuilder
-    arguments: ['@router.request_context', '@path.alias_manager']
+    arguments: ['@router.request_context', '@path.alias_manager', '@entity_type.manager']
     tags:
       - { name: breadcrumb_builder, priority: 1010 }
