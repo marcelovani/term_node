@@ -9,13 +9,10 @@ use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Path\AliasManagerInterface;
-use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\Url;
 use Drupal\taxonomy\Entity\Term;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class to define the term node breadcrumb builder.
@@ -46,7 +43,7 @@ class TermNodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     RequestContext $context,
     AliasManagerInterface $alias_manager,
     EntityTypeManagerInterface $entity_type_manager) {
-    
+
     $this->context = $context;
     $this->aliasManager = $alias_manager;
     $this->entityTypeManager = $entity_type_manager;
