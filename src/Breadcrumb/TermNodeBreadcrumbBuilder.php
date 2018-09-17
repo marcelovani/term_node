@@ -42,7 +42,11 @@ class TermNodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   protected $entityTypeManager;
 
-  public function __construct(RequestContext $context, AliasManagerInterface $alias_manager, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(
+    RequestContext $context,
+    AliasManagerInterface $alias_manager,
+    EntityTypeManagerInterface $entity_type_manager) {
+    
     $this->context = $context;
     $this->aliasManager = $alias_manager;
     $this->entityTypeManager = $entity_type_manager;
@@ -101,7 +105,12 @@ class TermNodeBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       foreach (array_reverse($parents) as $term) {
         //$term = $this->entityTypeManager->getTranslationFromContext($term);
         $breadcrumb->addCacheableDependency($term);
-        $breadcrumb->addLink(Link::createFromRoute($term->getName(), 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]));
+        $breadcrumb->addLink(
+          Link::createFromRoute($term->getName(),
+            'entity.taxonomy_term.canonical',
+            ['taxonomy_term' => $term->id()]
+          )
+        );
       }
 
       // This breadcrumb builder is based on a route parameter, and hence it
