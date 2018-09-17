@@ -9,7 +9,7 @@ services:
     arguments: ['@path.alias_manager', '@module_handler', '@term_node.inbound.path']
     tags:
       - { name: 'event_subscriber' }
-      - { name: path_processor_inbound, priority: 0 }
+      - { name: path_processor_inbound, priority: 101}
   term_node.resolver.term:
       class: Drupal\term_node\TermResolver
   term_node.outbound.path:
