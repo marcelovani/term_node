@@ -68,7 +68,6 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
   /**
    * Set the path ready for processInbound() and disable redirecting if the path changes.
    *
-   * Only used is the redirect module is enabled.
    * Has to be done in the kernel request event as the RouteNormalizerRequestSubscriber
    * performs the redirect on the kernel request event. This therefore has to
    * run before RouteNormalizerRequestSubscriber::onKernelRequestRedirect()
@@ -77,18 +76,15 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
    * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    */
   public function onKernelRequest(GetResponseEvent $event) {
-    // Only run this if the redirect module is enabled.
-    if ($this->moduleHandler->moduleExists('redirect')) {
-      $request = $event->getRequest();
+    $request = $event->getRequest();
 
-      // Get the internal path.
-      $alias = $request->getPathInfo();
-      $alias = $alias === '/' ? $alias : rtrim($request->getPathInfo(), '/');
-      $path = $this->aliasManager->getPathByAlias($alias);
+    // Get the internal path.
+    $alias = $request->getPathInfo();
+    $alias = $alias === '/' ? $alias : rtrim($request->getPathInfo(), '/');
+    $path = $this->aliasManager->getPathByAlias($alias);
 
-      // See if the path needs changing.
-      $this->inboundPath->process($path, $request);
-    }
+    // See if the path needs changing.
+    $this->inboundPath->process($path, $request);
   }
 
   /**
