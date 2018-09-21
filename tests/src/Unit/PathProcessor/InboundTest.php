@@ -25,17 +25,13 @@ class InboundTest extends UnitTestCase {
     $alias_manager = $this->getMockBuilder('\Drupal\Core\Path\AliasManagerInterface')
       ->getMock();
 
-    // Mock the module manager
-    $module_handler = $this->getMockBuilder('\Drupal\Core\Extension\ModuleHandlerInterface')
-      ->getMock();
-
     // Mock the InboundPathInterface
     $inbound_path = $this->getMockBuilder('\Drupal\term_node\PathProcessor\InboundPathInterface')
       ->getMock();
     $inbound_path->method('process')
       ->willReturn('/foo');
 
-    $inbound = new Inbound($alias_manager, $module_handler, $inbound_path);
+    $inbound = new Inbound($alias_manager, $inbound_path);
     $path = $inbound->processInbound('/foo', Request::create('/'));
 
     // Test that the path argument is returned.

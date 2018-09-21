@@ -2,11 +2,8 @@
 
 namespace Drupal\term_node\PathProcessor;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
-use Drupal\term_node\TermResolverInterface;
-use Drupal\term_node\NodeResolverInterface;
 use Drupal\term_node\ResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,13 +24,6 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
   protected $aliasManager;
 
   /**
-   * The core module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Handles changing the path if needed.
    *
    * @var \Drupal\term_node\PathProcessor\InboundPathInterface
@@ -50,11 +40,9 @@ class Inbound implements InboundPathProcessorInterface, EventSubscriberInterface
    */
   public function __construct(
     AliasManagerInterface $alias_manager,
-    ModuleHandlerInterface $module_handler,
     InboundPathInterface $inbound_path
   ) {
     $this->aliasManager = $alias_manager;
-    $this->moduleHandler = $module_handler;
     $this->inboundPath = $inbound_path;
   }
 

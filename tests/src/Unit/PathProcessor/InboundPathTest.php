@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\term_node\Unit\PathProcessor;
 
-use Drupal\term_node\PathProcessor\Inbound;
 use Drupal\term_node\PathProcessor\InboundPath;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @group term_node
  *
- * @coversDefaultClass \Drupal\term_node\PathProcessor\Inbound
+ * @coversDefaultClass \Drupal\term_node\PathProcessor\InboundPath
  */
 class InboundPathTest extends UnitTestCase {
 
@@ -27,17 +26,13 @@ class InboundPathTest extends UnitTestCase {
       ->getMock();
     $node_resolver = $this->getMockBuilder('\Drupal\term_node\NodeResolverInterface')
       ->getMock();
-    $module_handler = $this->getMockBuilder('\Drupal\Core\Extension\ModuleHandlerInterface')
-      ->getMock();
 
     $term_resolver->method('getPath')
       ->willReturn('/node/1');
     $node_resolver->method('getReferencedBy')
       ->willReturn(1);
-    $module_handler->method('moduleExists')
-      ->willReturn(TRUE);
 
-    $inbound_path = new InboundPath($term_resolver, $node_resolver, $module_handler);
+    $inbound_path = new InboundPath($term_resolver, $node_resolver);
 
     $path = $inbound_path->process($in, $request);
 

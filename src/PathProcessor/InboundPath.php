@@ -2,7 +2,6 @@
 
 namespace Drupal\term_node\PathProcessor;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\term_node\NodeResolverInterface;
 use Drupal\term_node\TermResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,13 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Drupal\term_node\PathProcessor
  */
 class InboundPath implements InboundPathInterface {
-
-  /**
-   * The core module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
 
   /**
    * Figures out if a different path should be used.
@@ -49,17 +41,13 @@ class InboundPath implements InboundPathInterface {
    *  Handles term path look ups.
    * @param \Drupal\term_node\NodeResolverInterface $node_resolver
    *  Handles node path look ups.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *  Drupal's module handler.
    */
   public function __construct(
     TermResolverInterface $term_resolver,
-    NodeResolverInterface $node_resolver,
-    ModuleHandlerInterface $module_handler
+    NodeResolverInterface $node_resolver
   ) {
     $this->termResolver = $term_resolver;
     $this->nodeResolver = $node_resolver;
-    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -76,8 +64,7 @@ class InboundPath implements InboundPathInterface {
     if ($count == 2 && $parts[0] == 'node') {
       // If the node is a term_node, do not redirect to the term path
       // when using the node's own path.
-      $redirect_module = $this->moduleHandler->moduleExists('redirect');
-      if ($redirect_module && $this->nodeResolver->getReferencedBy($parts[1])) {
+      if ($this->nodeResolver->getReferencedBy($parts[1])) {
         // Don't redirect.
         $request->attributes->add(['_disable_route_normalizer' => TRUE]);
       }

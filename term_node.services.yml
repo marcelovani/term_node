@@ -3,10 +3,10 @@ services:
     class: Drupal\term_node\NodeResolver
   term_node.inbound.path:
     class: Drupal\term_node\PathProcessor\InboundPath
-    arguments: ['@term_node.resolver.term', '@term_node.resolver.node', '@module_handler']
+    arguments: ['@term_node.resolver.term', '@term_node.resolver.node']
   term_node.inbound:
     class: Drupal\term_node\PathProcessor\Inbound
-    arguments: ['@path.alias_manager', '@module_handler', '@term_node.inbound.path']
+    arguments: ['@path.alias_manager', '@term_node.inbound.path']
     tags:
       - { name: 'event_subscriber' }
       - { name: path_processor_inbound, priority: 101}
