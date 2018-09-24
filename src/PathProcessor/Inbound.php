@@ -81,7 +81,7 @@ class Inbound implements InboundPathProcessorInterface {
       // but do not redirect to the node itself.
       $new_path = $this->termResolver->getPath($path, $parts[2]);
       if ($new_path != $path) {
-        $path = $this->path = $new_path;
+        $path = $new_path;
         // Don't redirect due to the path changing.
         $request->attributes->add(['_disable_route_normalizer' => TRUE]);
       }
