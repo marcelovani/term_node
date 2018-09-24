@@ -5,7 +5,6 @@ namespace Drupal\Tests\term_node\Unit\PathProcessor;
 use Drupal\term_node\PathProcessor\Inbound;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\KernelEvents;
 
 
 /**
@@ -19,32 +18,49 @@ class InboundTest extends UnitTestCase {
 
   /**
    * @covers ::processInbound
+   * @dataProvider getTestPaths
    */
-  public function testProcessInbound() {
+  public function testProcess($in, $out, $no_redirect) {
+    $request = Request::create('/');
+
     // Mock the alias manager.
     $alias_manager = $this->getMockBuilder('\Drupal\Core\Path\AliasManagerInterface')
       ->getMock();
+    $alias_manager->method('getPathByAlias')
+      ->willReturn($in);
 
-    // Mock the InboundPathInterface
-    $inbound_path = $this->getMockBuilder('\Drupal\term_node\PathProcessor\InboundPathInterface')
+    $term_resolver = $this->getMockBuilder('\Drupal\term_node\TermResolverInterface')
       ->getMock();
-    $inbound_path->method('process')
-      ->willReturn('/foo');
+    $node_resolver = $this->getMockBuilder('\Drupal\term_node\NodeResolverInterface')
+      ->getMock();
 
-    $inbound = new Inbound($alias_manager, $inbound_path);
-    $path = $inbound->processInbound('/foo', Request::create('/'));
+    $term_resolver->method('getPath')
+      ->willReturn('/node/1');
+    $node_resolver->method('getReferencedBy')
+      ->willReturn(1);
 
-    // Test that the path argument is returned.
-    $this->assertEquals('/foo', $path);
+    $inbound_path = new Inbound($alias_manager, $term_resolver, $node_resolver);
+
+    $path = $inbound_path->processInbound($in, $request);
+
+    // Test that the path is returned, changed if needed.
+    $this->assertEquals($out, $path);
+
+    // Test redirect is off if changed.
+    $redirect_disabled = $request->attributes->get('_disable_route_normalizer');
+    $this->assertEquals($no_redirect, $redirect_disabled);
   }
 
   /**
-   * @covers ::getSubscribedEvents
+   * Data provider for testProcessOutbound().
    */
-  public function testGetSubscribedEvents() {
-    $events[KernelEvents::REQUEST][] = ['onKernelRequest', 50];
-    // Ensure the event listener is configured.
-    $this->assertEquals($events, Inbound::getSubscribedEvents());
+  public function getTestPaths() {
+    return [
+      ['/taxonomy/term/2', '/node/1', TRUE],
+      ['/taxonomy/term/2/edit', '/taxonomy/term/2/edit', NULL],
+      ['/taxonomy/term/2/preview', '/taxonomy/term/2/preview', NULL],
+      ['/entity/3', '/entity/3', NULL],
+    ];
   }
 
 }
