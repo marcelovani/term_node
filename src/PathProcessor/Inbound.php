@@ -7,11 +7,7 @@ use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\term_node\NodeResolverInterface;
 use Drupal\term_node\ResolverInterface;
 use Drupal\term_node\TermResolverInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
-
 
 /**
  * Processes the inbound path using path alias lookups.
